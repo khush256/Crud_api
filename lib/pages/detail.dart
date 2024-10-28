@@ -18,8 +18,6 @@ class Detail extends StatefulWidget {
 class _DetailState extends State<Detail> {
   Future<void> updateUser(UserModel user) async {
     try {
-      print('updating');
-
       final response = await http.put(
         Uri.parse(
             "https://ca0fd29202dc8eff0b3a.free.beeceptor.com/api/users/${widget.user!.id}"),
@@ -32,18 +30,21 @@ class _DetailState extends State<Detail> {
       );
       if (response.statusCode == 200) {
         Get.snackbar('Update', "Details updated successfully");
-                Navigator.pop(context);
-
+        if (mounted) {
+          Navigator.pop(context);
+        }
       } else {
-        print(response.statusCode);
         Get.snackbar('Error', "Error occured while updating details");
-               Navigator.pop(context);
-
+        if (mounted) {
+          Navigator.pop(context);
+        }
       }
     } catch (e) {
       Get.snackbar('Error', e.toString());
-             Navigator.pop(context);
-
+      if (mounted) {
+        Navigator.pop(context);
+      }
+      (context);
     }
   }
 
@@ -56,16 +57,20 @@ class _DetailState extends State<Detail> {
 
       if (response.statusCode == 200) {
         Get.snackbar('Delete', "Details deleted successfully");
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
       } else {
         Get.snackbar('Error', "Error occured while deleting details");
-                Navigator.pop(context);
-
+        if (mounted) {
+          Navigator.pop(context);
+        }
       }
     } catch (e) {
       Get.snackbar('Error', e.toString());
-              Navigator.pop(context);
-
+      if (mounted) {
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -82,16 +87,21 @@ class _DetailState extends State<Detail> {
       );
       if (response.statusCode == 200) {
         Get.snackbar('Add', "User added successfully");
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
       } else {
         Get.snackbar('Error', "Error occured while adding user");
-                Navigator.pop(context);
-
+        if (mounted) {
+          Navigator.pop(context);
+        }
       }
     } catch (e) {
       Get.snackbar('Error', e.toString());
-              Navigator.pop(context);
-
+      if (mounted) {
+        Navigator.pop(context);
+      }
+      
     }
   }
 
@@ -110,8 +120,6 @@ class _DetailState extends State<Detail> {
       _sem.text = widget.user!.sem!;
       _id.text = widget.user!.id!;
     }
-
-    
 
     super.initState();
   }

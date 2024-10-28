@@ -8,15 +8,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // UserModel user = UserModel(
-    //     firstName: "khush",
-    //     lastName: 'Patel',
-    //     email: 'pkhush256@gmail.com',
-    //     sem: '5',
-    //     id: 'aslkdjeoir');
 
     return GetMaterialApp(
       title: 'Flutter Demo',
