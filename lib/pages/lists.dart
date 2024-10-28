@@ -1,6 +1,3 @@
-
-
-
 import 'dart:convert';
 
 import 'package:crud_api/models/user_model.dart';
@@ -22,7 +19,7 @@ class _UsersListState extends State<UsersList> {
   Future<List<UserModel>> getUsersList() async {
     try {
       final response = await http.get(Uri.parse(
-          "https://ca0fd29202dc8eff0b3a.free.beeceptor.com/api/users"));
+          "https://ca47c859003ad6c66eff.free.beeceptor.com/api/users"));
       var data = jsonDecode(response.body.toString());
       if (response.statusCode == 200) {
         userList.clear();
@@ -38,8 +35,6 @@ class _UsersListState extends State<UsersList> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,68 +45,92 @@ class _UsersListState extends State<UsersList> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
-        onPressed: () {
-          Get.to(const Detail(
-            isAdd: true,
-          ));
+        onPressed: () async {
+          // final result = await Get.to(() => const Detail(
+          //       isAdd: true,
+          //     ));
+          // if (result == true) {
+          //   setState(() {});
+          // }
+          Get.to(() => const Detail(isAdd: true))?.then((value) {
+            if (value == true) {
+              setState(() {});
+            }
+          });
         },
         child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: FutureBuilder(
-              future: getUsersList(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  return ListView.builder(
-                      itemCount: userList.length,
-                      itemBuilder: (context, index) {
-                        var data = snapshot.data!;
-                        return GestureDetector(
-                          onTap: () {
-                            Get.to(() => Detail(user: userList[index]));
-                          },
-                          child: Card(
-                            margin: const EdgeInsets.all(8.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "First Name: ${data[index].firstName}",
-                                  ),
-                                  Text(
-                                    "Last Name: ${data[index].lastName}",
-                                  ),
-                                  Text(
-                                    "Email: ${data[index].email}",
-                                  ),
-                                  Text(
-                                    "Sem: ${data[index].sem}",
-                                  ),
-                                  Text(
-                                    "Id: ${data[index].id}",
-                                  ),
-                                ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
+          return await Future.delayed(const Duration(milliseconds: 500));
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: FutureBuilder(
+                future: getUsersList(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return ListView.builder(
+                        itemCount: userList.length,
+                        itemBuilder: (context, index) {
+                          var data = snapshot.data!;
+                          return GestureDetector(
+                            onTap: () async {
+                              // final result = await Get.to(
+                              //     () => Detail(user: userList[index]));
+                              // if (result == true) {
+                              //   setState(() {}); // Refresh the list
+                              // }
+                              Get.to(() => Detail(user: userList[index]))
+                                  ?.then((value) {
+                                if (value == true) {
+                                  setState(() {}); // Refresh the list
+                                }
+                              });
+                            },
+                            child: Card(
+                              margin: const EdgeInsets.all(8.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "First Name: ${data[index].firstName}",
+                                    ),
+                                    Text(
+                                      "Last Name: ${data[index].lastName}",
+                                    ),
+                                    Text(
+                                      "Email: ${data[index].email}",
+                                    ),
+                                    Text(
+                                      "Sem: ${data[index].sem}",
+                                    ),
+                                    Text(
+                                      "Id: ${data[index].id}",
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      });
-                }
-              },
-            ),
-          )
-        ],
+                          );
+                        });
+                  }
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

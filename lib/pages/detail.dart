@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:crud_api/models/user_model.dart';
@@ -16,11 +15,11 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-  Future<void> updateUser(UserModel user) async {
+  void updateUser(UserModel user) async {
     try {
       final response = await http.put(
         Uri.parse(
-            "https://ca0fd29202dc8eff0b3a.free.beeceptor.com/api/users/${widget.user!.id}"),
+            "https://ca47c859003ad6c66eff.free.beeceptor.com/api/users/${widget.user!.id}"),
         body: jsonEncode({
           'first_name': user.firstName,
           'last_name': user.lastName,
@@ -29,55 +28,42 @@ class _DetailState extends State<Detail> {
         }),
       );
       if (response.statusCode == 200) {
+        Get.back(result: true);
         Get.snackbar('Update', "Details updated successfully");
-        if (mounted) {
-          Navigator.pop(context);
-        }
       } else {
-        Get.snackbar('Error', "Error occured while updating details");
-        if (mounted) {
-          Navigator.pop(context);
-        }
+        Get.back(result: false);
+        Get.snackbar('Error', "Error occurred while updating details");
       }
     } catch (e) {
+      Get.back(result: false);
       Get.snackbar('Error', e.toString());
-      if (mounted) {
-        Navigator.pop(context);
-      }
-      (context);
     }
   }
 
-  Future<void> deleteUser(String? id) async {
+  void deleteUser(String? id) async {
     try {
       final response = await http.delete(
         Uri.parse(
-            "https://ca0fd29202dc8eff0b3a.free.beeceptor.com/api/users/${widget.user!.id}"),
+            "https://ca47c859003ad6c66eff.free.beeceptor.com/api/users/${widget.user!.id}"),
       );
 
       if (response.statusCode == 200) {
+        Get.back(result: true); // Return true on success
         Get.snackbar('Delete', "Details deleted successfully");
-        if (mounted) {
-          Navigator.pop(context);
-        }
       } else {
-        Get.snackbar('Error', "Error occured while deleting details");
-        if (mounted) {
-          Navigator.pop(context);
-        }
+        Get.back(result: false);
+        Get.snackbar('Error', "Error occurred while deleting details");
       }
     } catch (e) {
+      Get.back(result: false);
       Get.snackbar('Error', e.toString());
-      if (mounted) {
-        Navigator.pop(context);
-      }
     }
   }
 
-  Future<void> addUser(UserModel user) async {
+  void addUser(UserModel user) async {
     try {
       final response = await http.post(
-        Uri.parse("https://ca0fd29202dc8eff0b3a.free.beeceptor.com/api/users/"),
+        Uri.parse("https://ca47c859003ad6c66eff.free.beeceptor.com/api/users/"),
         body: jsonEncode({
           'first_name': user.firstName,
           'last_name': user.lastName,
@@ -86,22 +72,16 @@ class _DetailState extends State<Detail> {
         }),
       );
       if (response.statusCode == 200) {
+        Get.back(result: true);
         Get.snackbar('Add', "User added successfully");
-        if (mounted) {
-          Navigator.pop(context);
-        }
+        // Navigator.pop(context, true);
       } else {
-        Get.snackbar('Error', "Error occured while adding user");
-        if (mounted) {
-          Navigator.pop(context);
-        }
+        Get.back(result: false);
+        Get.snackbar('Error', "Error occurred while adding user");
       }
     } catch (e) {
+      Get.back(result: false);
       Get.snackbar('Error', e.toString());
-      if (mounted) {
-        Navigator.pop(context);
-      }
-      
     }
   }
 
@@ -268,14 +248,14 @@ class _DetailState extends State<Detail> {
                     widget.isAdd!
                         ? Container()
                         : ElevatedButton(
-                            onPressed: () async {
+                            onPressed: () {
                               UserModel user = UserModel(
                                 firstName: _fname.text,
                                 lastName: _lname.text,
                                 email: _email.text,
                                 sem: _sem.text,
                               );
-                              await updateUser(user);
+                              updateUser(user);
                             },
                             child: const Text('Update')),
                     const SizedBox(
@@ -284,8 +264,8 @@ class _DetailState extends State<Detail> {
                     widget.isAdd!
                         ? Container()
                         : ElevatedButton(
-                            onPressed: () async {
-                              await deleteUser(widget.user!.id);
+                            onPressed: () {
+                              deleteUser(widget.user!.id);
                             },
                             child: const Text('Delete')),
                     const SizedBox(
@@ -293,14 +273,14 @@ class _DetailState extends State<Detail> {
                     ),
                     widget.isAdd!
                         ? ElevatedButton(
-                            onPressed: () async {
+                            onPressed: () {
                               UserModel user = UserModel(
                                 firstName: _fname.text,
                                 lastName: _lname.text,
                                 email: _email.text,
                                 sem: _sem.text,
                               );
-                              await addUser(user);
+                              addUser(user);
                             },
                             child: const Text('Add'))
                         : Container(),
