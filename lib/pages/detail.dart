@@ -73,7 +73,12 @@ class _DetailState extends State<Detail> {
       );
       if (response.statusCode == 200) {
         Get.back(result: true);
-        Get.snackbar('Add', "User added successfully");
+        Get.snackbar(
+          'Add',
+          "User added successfully",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+        );
         // Navigator.pop(context, true);
       } else {
         Get.back(result: false);
